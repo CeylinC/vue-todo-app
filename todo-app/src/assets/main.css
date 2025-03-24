@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+
+@theme {
+  --color-light-grayish: #f0f0f3;
+  --shadow-dark-drop: 10px 10px 30px 0 rgba(174, 174, 192, 0.4), -23px -23px 45px 0 rgba(255, 255, 255, 1);
+}
+
+html{
+  background-color: var(--color-light-grayish);
+}
