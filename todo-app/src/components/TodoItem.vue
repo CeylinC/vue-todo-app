@@ -8,7 +8,7 @@ export default {
       required: true
     },
     deleteTodoItem: {
-      type: Function as PropType<() => void>
+      type: Function as PropType<(id: number) => void>
     },
     editTodoItem: {
       type: Function as PropType<(id: number, newTitle: string) => void>
