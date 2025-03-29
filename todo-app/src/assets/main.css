@@ -3,7 +3,8 @@
 
 @theme {
   --color-light-grayish: #f0f0f3;
-  --shadow-dark-drop: 10px 10px 30px 0 rgba(174, 174, 192, 0.4), -23px -23px 45px 0 rgba(255, 255, 255, 1);
+  --shadow-drop: 10px 10px 30px 0 rgba(174, 174, 192, 0.4), -23px -23px 45px 0 rgba(255, 255, 255, 1);
+  --shadow-inner: inset 10px 10px 10px 0 rgba(174, 174, 192, 0.2), inset -10px -10px 10px 0 rgba(255, 255, 255, 0.77);
 }
 
 html{
