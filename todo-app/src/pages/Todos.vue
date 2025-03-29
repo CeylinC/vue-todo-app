@@ -29,8 +29,15 @@ export default {
     editTodoItem(id: number, newTitle: string) {
       const todoIndex = this.todos.findIndex((todo) => todo.id === id)
       if (todoIndex !== -1) {
-        console.log(newTitle)
         this.todos[todoIndex].title = newTitle
+        localStorage.setItem('todos', JSON.stringify(this.todos))
+      }
+    },
+    checkTodoItem(id: number) {
+      const todoIndex = this.todos.findIndex((todo) => todo.id === id)
+      if (todoIndex !== -1) {
+        this.todos[todoIndex].isCompleted = !this.todos[todoIndex].isCompleted
+        console.log(this.todos[todoIndex].isCompleted)
         localStorage.setItem('todos', JSON.stringify(this.todos))
       }
     },
@@ -46,6 +53,7 @@ export default {
       :todoItem="item"
       :deleteTodoItem="deleteTodoItem"
       :editTodoItem="editTodoItem"
+      :checkTodoItem="checkTodoItem"
     />
   </div>
 </template>
