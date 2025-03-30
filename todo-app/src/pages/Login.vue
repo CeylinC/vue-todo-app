@@ -1,17 +1,54 @@
 <script lang="ts">
-import LoginContainer from '@/components/LoginContainer.vue'
+import Input from '@/components/Input.vue'
+import Button from '@/components/Button.vue'
+import axios from 'axios'
 export default {
   components: {
-    LoginContainer,
+    Input,
+    Button,
   },
   data() {
+    return {
+      email: '',
+      password: '',
+    }
   },
-  methods: {}
+  methods: {
+    async login() {
+      try {
+        const { data } = await axios.post('http://localhost:3000/login', {
+          email: this.email,
+          password: this.password,
+        })
+
+        if (data.token) {
+          document.cookie = `token=${data.token}; path=/; secure; SameSite=Strict`
+          this.$router.push({ path: '/' })
+        } else {
+          console.error('No token received in response')
+        }
+      } catch (error) {
+        console.error('Login error:', error)
+      }
+    },
+  },
 }
 </script>
 
 <template>
   <div class="w-full h-screen flex flex-col justify-center items-center">
-    <LoginContainer />
+    <div
+      class="w-[320px] h-[500px] shadow-drop flex justify-center items-center flex-col gap-8 rounded-2xl"
+    >
+      <div>
+        <div class="text-sm text-center">Todo App</div>
+        <div class="text-2xl font-bold text-center">LOGIN</div>
+      </div>
+      <div class="flex flex-col gap-6">
+        <Input placeholder="Email" v-model="email" />
+        <Input placeholder="Password" v-model="password" />
+      </div>
+      <Button title="Login" @click="login" />
+    </div>
   </div>
 </template>
