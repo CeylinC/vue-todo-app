@@ -1,37 +1,33 @@
 const express = require("express");
 router = express.Router();
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
+const db = require("../services/db");
 require('dotenv').config();
-
-const usersFilePath = path.join(__dirname, '../users.json');
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'secret_key';
 
-const getUsers = () => {
-  const usersData = fs.readFileSync(usersFilePath);
-  return JSON.parse(usersData);
-};
-
 router.post("/", (req, res) => {
   const { email, password } = req.body;
-  const users = getUsers();
-  console.log(users)
-  const user = users.find(u => u.email === email && u.password === password);
 
-  if (!user) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
+  const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+  db.query(sql, [email, password], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: "Veritabanı hatası", error: err });
+    }
 
-  // JWT token oluştur
-  const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET_KEY, { expiresIn: '1h' });
+    if (result.length === 0) {
+      return res.status(401).json({ message: "Geçersiz kimlik bilgileri" });
+    }
 
-  // Başarılı login, token döndürülür
-  res.json({
-    message: 'Login successful',
-    token: token
+    const user = result[0];
+    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({
+      message: "Giriş başarılı",
+      token: token
+    });
   });
 });
+
 
 module.exports = router;
