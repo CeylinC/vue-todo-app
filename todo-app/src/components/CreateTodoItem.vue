@@ -20,19 +20,35 @@ export default {
       this.userId = JSON.parse(savedUserId)
     }
   },
+  emits: ['todoAdded'],
   data() {
     return {
       title: '',
       userId: '',
+      errorMessage: '',
     }
   },
   methods: {
     async saveTodo() {
-      const { data } = await axios.post('http://localhost:3000/todos', {
-        todoTitle: this.title,
-        userId: this.userId,
-      })
+      try {
+        const { data } = await axios.post('http://localhost:3000/todos', {
+          todoTitle: this.title,
+          userId: this.userId,
+        })
+        this.$emit('todo-added', {
+          id: data.id,
+          is_completed: 0,
+          title: this.title,
+        })
 
+        this.title = ''
+      } catch (e) {
+        if (e.response) {
+          this.errorMessage = e.response.data.message || 'Bir hata oluştu'
+        } else {
+          this.errorMessage = 'Sunucuya ulaşılamıyor'
+        }
+      }
     },
   },
   computed: {
@@ -65,4 +81,5 @@ export default {
       </button>
     </div>
   </div>
+  <div v-if="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</div>
 </template>

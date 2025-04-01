@@ -3,11 +3,17 @@ router = express.Router();
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const db = require("../services/db");
+const signupSchema = require("../model/signup");
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "secret_key";
 
 router.post("/", (req, res) => {
-  const { username, email, password } = req.body;
+  const { error, value } = signupSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  const { username, email, password } = value;
 
   try {
     const sql =

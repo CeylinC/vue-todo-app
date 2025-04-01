@@ -11,10 +11,12 @@ export default {
     return {
       email: '',
       password: '',
+      errorMessage: ''
     }
   },
   methods: {
     async login() {
+      this.errorMessage = ''
       try {
         const { data } = await axios.post('http://localhost:3000/login', {
           email: this.email,
@@ -30,7 +32,11 @@ export default {
           console.error('No token received in response')
         }
       } catch (error) {
-        console.error('Login error:', error)
+        if (error.response) {
+          this.errorMessage = error.response.data.message || "Giriş başarısız"
+        } else {
+          this.errorMessage = "Sunucuya bağlanılamadı"
+        }
       }
     },
   },
@@ -50,7 +56,9 @@ export default {
         <Input placeholder="Email" v-model="email" />
         <Input placeholder="Password" v-model="password" />
       </div>
+      <div v-if="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</div>
       <Button title="Login" @click="login" />
+      <a href="/signup">Signup</a>
     </div>
   </div>
 </template>

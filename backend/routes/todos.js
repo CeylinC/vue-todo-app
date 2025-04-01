@@ -1,13 +1,15 @@
 const express = require("express")
 router = express.Router();
 const db = require("../services/db");
+const todoSchema = require("../model/todo");
 
 router.post("/", (req, res) => {
-  const { todoTitle, userId } = req.body;
-
-  if (!todoTitle || !userId) {
-    return res.status(400).json({ error: 'Başlık ve kullanıcı ID zorunludur' });
+  const { error, value } = todoSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
   }
+
+  const { todoTitle, userId } = value;
 
   const newTodo = {
     title: todoTitle,

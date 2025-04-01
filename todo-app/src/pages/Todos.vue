@@ -40,7 +40,11 @@ export default {
     logout() {
       document.cookie = 'token' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       this.$router.push({ path: '/login' })
-    }
+    },
+    handleAddedTodo(newTodo) {
+    const todoInstance = new Todo(newTodo)
+    this.todos.unshift(todoInstance)
+  },
   },
 }
 </script>
@@ -48,10 +52,10 @@ export default {
 <template>
   <div class="relative w-full h-screen flex flex-col justify-center items-center">
     <div class="absolute top-4 shadow-drop p-3 rounded-md w-[400px] flex flex-row justify-between"><div>Welcome {{ username }}</div><Logout @click="logout"/></div>
-    <CreateTodoItem :todoList="todos" />
+    <CreateTodoItem :todoList="todos" @todo-added="handleAddedTodo"/>
     <TodoItem
       v-for="item in todos"
-      :user-id="userId"
+      :user-id="String(userId)"
       :todoItem="item"
       :deleteTodoItem="deleteTodoItem"
     />
