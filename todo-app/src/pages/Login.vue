@@ -24,6 +24,7 @@ export default {
         if (data.token) {
           document.cookie = `token=${data.token}; path=/; secure; SameSite=Strict`
           localStorage.setItem("userID", data.userId)
+          localStorage.setItem("username", data.username)
           this.$router.push({ path: '/' })
         } else {
           console.error('No token received in response')

@@ -27,6 +27,7 @@ router.post("/", (req, res) => {
     res.json({
       message: "Giriş başarılı",
       userId: user.id,
+      username: user.username,
       token: token
     });
   });

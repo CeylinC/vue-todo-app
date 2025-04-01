@@ -35,6 +35,7 @@ router.post("/", (req, res) => {
       res.status(201).json({
         message: "Kullanıcı oluşturuldu!",
         userId: userId,
+        username: user.username,
         token: token,
       });
     });
