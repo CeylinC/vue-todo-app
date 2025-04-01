@@ -50,7 +50,7 @@ export default {
 </script>
 
 <template>
-  <div class="relative w-full h-screen flex flex-col justify-center items-center">
+  <div class="relative w-full min-h-[100vh] flex flex-col py-30 items-center">
     <div class="absolute top-4 shadow-drop p-3 rounded-md w-[400px] flex flex-row justify-between"><div>Welcome {{ username }}</div><Logout @click="logout"/></div>
     <CreateTodoItem :todoList="todos" @todo-added="handleAddedTodo"/>
     <TodoItem

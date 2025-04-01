@@ -18,13 +18,13 @@ router.post("/", (req, res) => {
 
   db.query('INSERT INTO todos SET ?', newTodo, (err, result) => {
     if (err) {
-      console.error('Todo eklerken hata:', err);
-      return res.status(500).json({ error: 'Veritabanı hatası' });
+      console.error('Error Add Todo:', err);
+      return res.status(500).json({ error: 'Database Error' });
     }
 
     return res.status(201).json({ 
       id: result.insertId,
-      message: 'Todo başarıyla eklendi'
+      message: 'Succesfull Add Todo'
     });
   })
 })
@@ -34,8 +34,8 @@ router.get("/:userId", (req, res) => {
   
   db.query('SELECT * FROM todos WHERE user_id = ?', [userId], (err, results) => {
     if (err) {
-      console.error('Veritabanı sorgu hatası:', err);
-      return res.status(500).json({ error: 'Veritabanı hatası' });
+      console.error('Database Query Error:', err);
+      return res.status(500).json({ error: 'Database Error' });
     }
     res.json(results);
   });
@@ -59,7 +59,7 @@ router.put("/:userId/:todoId", (req, res) => {
   }
 
   if (updateFields.length === 0) {
-    return res.status(400).json({ error: "Güncellenecek alan belirtilmedi." });
+    return res.status(400).json({ error: "No field to update specified." });
   }
 
   const sql = `UPDATE todos SET ${updateFields.join(", ")} WHERE id = ? AND user_id = ?`;
@@ -70,14 +70,14 @@ router.put("/:userId/:todoId", (req, res) => {
     [...values, todoId, userId],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ error: "Veritabanı hatası" });
+        return res.status(500).json({ error: "Database Error" });
       }
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Todo bulunamadı" });
+        return res.status(404).json({ error: "Todo Not Found" });
       }
 
-      res.json({ message: "Todo başarıyla güncellendi" });
+      res.json({ message: "Succesfull Todo Update" });
     }
   );
 });
@@ -89,14 +89,14 @@ router.delete("/:userId/:todoId", (req, res) => {
 
   db.query(sql, [todoId, userId], (err, result) => {
     if (err) {
-      return res.status(500).json({ error: "Veritabanı hatası" });
+      return res.status(500).json({ error: "Database Error" });
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Todo bulunamadı veya kullanıcıya ait değil" });
+      return res.status(404).json({ error: "Todo not found or does not belong to user" });
     }
 
-    res.json({ message: "Todo başarıyla silindi" });
+    res.json({ message: "Successfull Delete Todo" });
   });
 });
 

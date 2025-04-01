@@ -18,11 +18,11 @@ router.post("/", (req, res) => {
   const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
   db.query(sql, [email, password], (err, result) => {
     if (err) {
-      return res.status(500).json({ message: "Veritabanı hatası", error: err });
+      return res.status(500).json({ message: "Database error", error: err });
     }
 
     if (result.length === 0) {
-      return res.status(401).json({ message: "Geçersiz kimlik bilgileri" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const user = result[0];
@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
     );
 
     res.json({
-      message: "Giriş başarılı",
+      message: "Succesfull Login",
       userId: user.id,
       username: user.username,
       token: token,
