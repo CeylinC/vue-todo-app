@@ -20,10 +20,13 @@ router.post("/", (req, res) => {
     }
 
     const user = result[0];
+
+    console.log(user)
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET_KEY, { expiresIn: "1h" });
 
     res.json({
       message: "Giriş başarılı",
+      userId: user.id,
       token: token
     });
   });

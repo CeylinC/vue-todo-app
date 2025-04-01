@@ -12,11 +12,11 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-const main = require('./routes/main')
+const todos = require('./routes/todos')
 const login = require('./routes/login')
 const signup = require('./routes/signup')
 
-app.use('/', main)
+app.use('/todos', todos)
 app.use('/login', login)
 app.use('/signup', signup)
 

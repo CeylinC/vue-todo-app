@@ -1,7 +1,8 @@
 <script lang="ts">
 import CreateTodoItem from '@/components/CreateTodoItem.vue'
 import TodoItem from '@/components/TodoItem.vue'
-import type { ITodoItem } from '@/models/TodoItem'
+import { Todo, type ITodoItem } from '@/models/TodoItem'
+import axios from 'axios'
 export default {
   components: {
     TodoItem,
@@ -11,35 +12,21 @@ export default {
     return {
       todos: [] as ITodoItem[],
       isEditing: false,
+      userId: String
     }
   },
-  mounted() {
-    const savedTodos = localStorage.getItem('todos')
-    if (savedTodos) {
-      this.todos = JSON.parse(savedTodos)
+  async mounted() {
+    const savedUserId = localStorage.getItem('userID')
+    if(savedUserId) {
+      this.userId = JSON.parse(savedUserId)
     }
+    const { data } = await axios.get(`http://localhost:3000/todos/${this.userId}`)
+    this.todos = data.map((_data: any) => new Todo(_data))
   },
   methods: {
-    deleteTodoItem(id: number) {
-      const newTodos: ITodoItem[] = this.todos.filter((todo) => (todo as ITodoItem).id !== id)
-      this.todos = newTodos
-      if (newTodos.length > 0) localStorage.setItem('todos', JSON.stringify(newTodos))
-      else localStorage.removeItem('todos')
-    },
-    editTodoItem(id: number, newTitle: string) {
-      const todoIndex = this.todos.findIndex((todo) => todo.id === id)
-      if (todoIndex !== -1) {
-        this.todos[todoIndex].title = newTitle
-        localStorage.setItem('todos', JSON.stringify(this.todos))
-      }
-    },
-    checkTodoItem(id: number) {
-      const todoIndex = this.todos.findIndex((todo) => todo.id === id)
-      if (todoIndex !== -1) {
-        this.todos[todoIndex].isCompleted = !this.todos[todoIndex].isCompleted
-        console.log(this.todos[todoIndex].isCompleted)
-        localStorage.setItem('todos', JSON.stringify(this.todos))
-      }
+    async deleteTodoItem(id: number) {
+      await axios.delete(`http://localhost:3000/todos/${this.userId}/${id}`)
+      this.todos = this.todos.filter((todo) => id !== todo.id)
     },
   },
 }
@@ -50,10 +37,9 @@ export default {
     <CreateTodoItem :todoList="todos" />
     <TodoItem
       v-for="item in todos"
+      :user-id="userId"
       :todoItem="item"
       :deleteTodoItem="deleteTodoItem"
-      :editTodoItem="editTodoItem"
-      :checkTodoItem="checkTodoItem"
     />
   </div>
 </template>
