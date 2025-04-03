@@ -1,7 +1,7 @@
 const express = require("express")
 router = express.Router();
-const db = require("../services/db");
-const todoSchema = require("../model/todo");
+const db = require("../services/dbConnection.services");
+const todoSchema = require("../validators/todo.validators");
 
 router.post("/", (req, res) => {
   const { error, value } = todoSchema.validate(req.body);

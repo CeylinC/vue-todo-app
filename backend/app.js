@@ -1,5 +1,5 @@
-require('dotenv').config();
-const cors = require('cors');
+require('dotenv').config()
+const cors = require('cors')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -13,8 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const todos = require('./routes/todos')
-const login = require('./routes/login')
-const signup = require('./routes/signup')
+const login = require('./routes/login.router')
+const signup = require('./routes/signup.router')
 
 app.use('/todos', todos)
 app.use('/login', login)

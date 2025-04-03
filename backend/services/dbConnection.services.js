@@ -16,7 +16,7 @@ db.getConnection((err, connection) => {
         console.error("❌ MySQL bağlantı hatası:", err);
     } else {
         console.log("✅ MySQL bağlantısı başarılı!");
-        connection.release(); // Bağlantıyı serbest bırak
+        connection.release();
     }
 });
 
